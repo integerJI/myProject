@@ -1,14 +1,28 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
-# Create your views here.
+
+from .forms import UserCreationMultiForm
 
 def signup(request):
     if request.method == 'POST':
-        if request.POST['password1'] == request.POST['password2']:
-            user = User.objects.create_user(request.POST['username'], password=request.POST['password1'])
-            auth.login(request, user)
-        return redirect('signin')
+        if request.POST['user-password1'] == request.POST['user-password2']:
+            form = UserCreationMultiForm(request.POST, request.FILES)
+            if form.is_valid(): 
+                user = form['user'].save()
+                profile = form['profile'].save(commit=False)
+                profile.user = user
+                profile.nick = user
+                profile.save()
+                return redirect('login')
+            else:
+                user = request.POST['user-username']
+                user = User.objects.get(username=user)
+                messages.info(request, '아이디가 중복됩니다.')
+                return render(request, 'signup.html')
+        else:
+            messages.info(request, '비밀번호가 다릅니다.')
+            return render(request, 'signup.html')
     return render(request, 'signup.html')
 
 def signin(request):
