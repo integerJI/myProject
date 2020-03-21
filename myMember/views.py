@@ -1,40 +1,23 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
-
-from .forms import UserCreationMultiForm
+from django.contrib.auth.views import LoginView, LogoutView
+from django.conf import settings
 
 def signup(request):
     if request.method == 'POST':
-        if request.POST['user-password1'] == request.POST['user-password2']:
-            form = UserCreationMultiForm(request.POST, request.FILES)
-            if form.is_valid(): 
-                user = form['user'].save()
-                profile = form['profile'].save(commit=False)
-                profile.user = user
-                profile.nick = user
-                profile.save()
-                return redirect('login')
-            else:
-                user = request.POST['user-username']
-                user = User.objects.get(username=user)
-                messages.info(request, '아이디가 중복됩니다.')
-                return render(request, 'signup.html')
-        else:
-            messages.info(request, '비밀번호가 다릅니다.')
-            return render(request, 'signup.html')
+        if request.POST['password1'] == request.POST['password2']:
+            user = User.objects.create_user(
+                request.POST['username'], password=request.POST['password1'])
+            auth.login(request, user)
+            return redirect('signin')
     return render(request, 'signup.html')
 
-def signin(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = auth.authenticate(request, username=username, password=password)
-        if user is not None:
-            auth.login(request, user)
-            return redirect('index')
-    else:
-        return render(request, 'signin.html')
+class Loginviews(LoginView):
+    template_name = 'signin.html'
+signin = Loginviews.as_view()
 
-def signout(request):
-    return render(request, 'signin.html')
+
+class LogoutViews(LogoutView):
+    next_page = settings.LOGOUT_REDIRECT_URL
+signout = LogoutViews.as_view()
