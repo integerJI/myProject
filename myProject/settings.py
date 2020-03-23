@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize', # 시간 추가
     'myApp.apps.MyappConfig',
     'myMember.apps.MymemberConfig',
 ]
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'myProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['myProject/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
