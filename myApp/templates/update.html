@@ -1,0 +1,13 @@
+<!--myApp/templates/update.html-->
+{% extends 'base.html' %}
+{% block content %}
+<body>
+    <form method="POST">
+        {%csrf_token%}
+        <textarea cols=40 rows=10 name="main_text"></textarea>
+        <br>
+        <br>
+        <input class="btn btn-dark" type="submit" value="post">
+    </form> 
+</body>
+{% endblock %}
