@@ -31,3 +31,11 @@ base.html 추가
 글 수정, 삭제 추가
 
 글 수정 기록을 위한 update_date 추가
+
+# 2020 - 03 - 30
+
+댓글쓰기를 위한 Comment 모델 추가
+
+모든 date의 기본값 추가, default=timezone.now
+
+댓글 쓰기 추가, 목록 출력
