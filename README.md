@@ -39,3 +39,11 @@ base.html 추가
 모든 date의 기본값 추가, default=timezone.now
 
 댓글 쓰기 추가, 목록 출력
+
+# 2020 - 03 - 31
+
+디테일 페이지 추가
+
+index에서 댓글달면 index로
+
+detail에서 댓글달면 detail로 이동

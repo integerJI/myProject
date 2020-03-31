@@ -8,7 +8,8 @@ from .models import Post, Comment
 
 def index(request):
     posts = Post.objects.order_by('-id')
-    return render(request, 'index.html', {'posts':posts})
+    app_url = request.path
+    return render(request, 'index.html', {'posts':posts, 'app_url':app_url})
 
 def post(request):
     if request.method == 'POST':
@@ -20,6 +21,10 @@ def post(request):
         return redirect(reverse('index'))
     return render(request, 'post.html')
 
+def detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    return render(request, 'detail.html', {'post': post})
+    
 def update(request, post_id):
     post = Post.objects.get(id = post_id)
     if request.method == 'POST':
@@ -42,4 +47,8 @@ def c_post(request, post_id):
         comment_text = request.POST.get('comment_text')
         comment_user = User.objects.get(username = request.user.get_username())
         Comment.objects.create(comment=comment, comment_text=comment_text, comment_user=comment_user)
-        return redirect(reverse('index'), post_id)
+
+        if request.POST.get('app_url') == '/myApp/index/':
+            return redirect(reverse('index'), post_id)
+        else :
+            return redirect('detail', post_id)
