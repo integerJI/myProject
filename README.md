@@ -47,3 +47,9 @@ base.html 추가
 index에서 댓글달면 index로
 
 detail에서 댓글달면 detail로 이동
+
+# 2020 - 04 - 02
+
+댓글 삭제 추가
+
+글 삭제 post 형식으로 변경
