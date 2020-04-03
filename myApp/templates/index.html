@@ -1,5 +1,6 @@
 <!--myApp/templates/index.html-->
 {% extends 'base.html' %}
+{% load static %}
 
 <!-- django에서 지원하는 여러가지 시간 표현 형식 모음 -->
 {% load humanize %}
@@ -8,12 +9,18 @@
 <body>
     {% for post in posts.all %}
     <div class="card">
-        <div class="card-header">{{ post.create_user }}<a href="{% url 'update' post.id %}">수정</a>
-          
-          <form action="{% url 'delete' post.id %}" method="POST">
-              {% csrf_token %}
-              <button type="submit">삭제</button>
+        <div class="card-header">{{ post.create_user }}
+
+          <div class="d-flex self-center" style="display:inline">
+
+          <a href="{% url 'update' post.id %}"><img src="/static/update.png" alt="Update" width="25dp" height="25dp"></a>
+          <form action="{% url 'delete' post.id %}" method="POST" style="display:inline">
+            {% csrf_token %}
+            <input type="image" src="/static/delete.png" name="Submit" value="Submit" align="Delete" width="25dp" height="25dp">
           </form>        
+
+          </div>
+
           
         </div>
         <div class="card-body">

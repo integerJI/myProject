@@ -122,6 +122,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'myApp', 'static')
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # myProject/settings.py
 
 # 로그인 페이지 지정
