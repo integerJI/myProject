@@ -7,20 +7,58 @@
 
 {% block content %}
 <body>
+
+  <div class="container">
+    {% for post in posts.all %}
+    <div class="card-deck mb-3">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header d-flex justify-content-between">
+  
+          <h4 class="my-0 font-weight-normal">{{ post.create_user }}</h4>
+          <a href="{% url 'update' post.id %}">수정</a>
+          <a href="{% url 'delete' post.id %}">삭제</a>
+          
+        </div>
+
+        <div class="card-body">
+          <a class="card-title pricing-card-title">{{ post.main_text }}<small class="text-muted">&nbsp;&nbsp;{{ post.create_date | naturaltime }}</small></a>
+          
+          <hr>
+          {% for comment in post.comments.all %}
+          <span class="comment_user">{{comment.comment_user}}</span>
+          <small class="text-muted">{{comment.comment_date}}</small>
+          <br>
+          <a class="card-text">{{comment.comment_text}}
+          <br>
+          {% endfor %}
+          <br>
+          <form action="{% url 'c_post' post.id %}" method="POST">
+            {% csrf_token %}
+            <div class="input-group input-group-sm mb-3">
+              <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="comment_text" id="comment_text" placeholder="댓글 달기 ...">
+              <input type="hidden" name="app_url" id="app_url" value="{{app_url}}"/>
+              <div class="input-group-prepend">
+                <button class="input-group-text" id="inputGroup-sizing-sm" type="submit">게시</button>
+              </div>
+            </div>
+          </form>
+  
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+
+<!-- 옛날꺼 -->
+<!--
+<body>
     {% for post in posts.all %}
     <div class="card">
         <div class="card-header">{{ post.create_user }}
-
-          <div class="d-flex self-center" style="display:inline">
-
-          <a href="{% url 'update' post.id %}"><img src="/static/update.png" alt="Update" width="25dp" height="25dp"></a>
-          <form action="{% url 'delete' post.id %}" method="POST" style="display:inline">
-            {% csrf_token %}
-            <input type="image" src="/static/delete.png" name="Submit" value="Submit" align="Delete" width="25dp" height="25dp">
-          </form>        
-
-          </div>
-
+          <a href="{% url 'update' post.id %}">수정</a>
+          <a href="{% url 'delete' post.id %}">삭제</a>
           
         </div>
         <div class="card-body">
@@ -57,4 +95,5 @@
       <br>
       {% endfor %}
 </body>
-{% endblock %}
+-->
+<!-- 옛날꺼 끝 -->

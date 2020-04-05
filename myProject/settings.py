@@ -120,6 +120,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+# myProject/settings.py
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
@@ -127,8 +129,6 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-# myProject/settings.py
 
 # 로그인 페이지 지정
 LOGIN_URL = '/signin/'

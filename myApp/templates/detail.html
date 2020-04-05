@@ -4,12 +4,9 @@
 {% block content %}
 <body>
     <div class="card">
-        <div class="card-header">{{ post.create_user }}<a href="{% url 'update' post.id %}">수정</a>
-          
-          <form action="{% url 'delete' post.id %}" method="POST">
-              {% csrf_token %}
-              <button type="submit">삭제</button>
-          </form>        
+        <div class="card-header">{{ post.create_user }}
+          <a href="{% url 'update' post.id %}">수정</a>
+          <a href="{% url 'delete' post.id %}">삭제</a>
         
         </div>
         <div class="card-body">
