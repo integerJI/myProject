@@ -73,3 +73,11 @@ detail에서 댓글달면 detail로 이동
 
 index.html 리뉴얼
 ( detail, 댓글삭제 등 수정 예정 )
+
+# 2020 - 04 - 07
+
+이미지 등록 추가
+
+media 경로 추가
+
+index.html 디자인 수정
