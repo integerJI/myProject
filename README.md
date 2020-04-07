@@ -81,3 +81,9 @@ index.html 리뉴얼
 media 경로 추가
 
 index.html 디자인 수정
+
+# 2020 - 04 - 08
+
+이미지 엑박 오류 수정, myApp -> myProject로 media url 이동
+
+이미지는 반응형이 아님 ( 수정 예정 )

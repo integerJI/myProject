@@ -28,6 +28,8 @@
       <div class="text-center">
         <img src="{{post.create_img.url}}" class="rounded" alt="..." width="585.5dp" height="585.5dp">
       </div>
+      
+
       {% else %}
       <a>no</a>
       {% endif %}
@@ -82,5 +84,54 @@
   </div>
   {% endfor %}
 </div>
+
+<!--
+    {% for post in posts.all %}
+    <div class="card">
+        <div class="card-header">{{ post.create_user }}
+          
+          <form action="{% url 'update' post.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit">수정</button>
+          </form>
+
+          <form action="{% url 'delete' post.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit">삭제</button>
+          </form>
+
+        </div>
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <p>{{ post.main_text }}</p>
+            <a href="{% url 'detail' post.id %}" >댓글 모두 보기 </a><a> {{ post.create_date | naturaltime }}</a>
+          </blockquote>
+        </div>
+        <div class="card-footer">
+          <form action="{% url 'c_post' post.id %}" method="POST">
+              {% csrf_token %}
+              <input type="text" name="comment_text" id="comment_text" placeholder="댓글달아주세요">
+              <input type="hidden" name="app_url" id="app_url" value="{{app_url}}"/>
+              <button type="submit">댓글달기</button>
+          </form>
+
+          {% for comment in post.comments.all %}
+          <span class="comment_user">{{comment.comment_user}}</span>
+          <small class="text-muted">{{comment.comment_date}}</small>
+          <br>
+          <a class="card-text">{{comment.comment_text}}
+
+          <form action="{% url 'c_delete' post.pk comment.pk %}" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="app_url" id="app_url" value="{{app_url}}"/>
+              <button type="submit">삭제</button>
+          </form>
+
+          {% endfor %}
+        </div>
+      </div>
+      <br>
+      {% endfor %}
+-->
 </body>
 {% endblock %}
