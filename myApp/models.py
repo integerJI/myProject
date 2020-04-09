@@ -10,9 +10,14 @@ class Post(models.Model):
     create_date = models.DateTimeField('date published', default=timezone.now)
     update_date = models.DateTimeField('date published', null = True, default=timezone.now)
     create_img = models.ImageField(blank=True, upload_to="post/%Y/%m/%d", null=True)
+    post_likes = models.ManyToManyField(User, related_name='post_likes')
 
     def __str__(self):
         return self.main_text
+
+    @property
+    def total_likes(self):
+        return self.post_likes.count()
 
 class Comment(models.Model):
     comment = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, related_name='comments')
