@@ -99,3 +99,7 @@ ajax, javascript 추가
 mypage, userpage 추가
 
 회원가입 form 생성
+
+# 2020 - 04 - 11 (2)
+
+mypage 수정 기능 추가
