@@ -4,16 +4,29 @@ from django.shortcuts import render, redirect # 로그인 / 로그아웃 View �
 from django.contrib.auth.views import LoginView, LogoutView # DB의 USER
 from django.contrib.auth.models import User
 from django.conf import settings # setting.py에서 오버라이딩
+from .forms import UserCreationMultiForm, ProfileForm, ProfileUpdateForm
+from .models import Profile
+from django.contrib.auth.decorators import login_required
 
 def signup(request):
     if request.method == 'POST':
-        # 비밀번호 1과 2를 비교 같으면 실행
-        if request.POST['password1'] == request.POST['password2']:
-            # User Model에 새로운 유저 생성
-            user = User.objects.create_user(username=request.POST['username'], password=request.POST['password1'])
-            # 로그인 페이지로 이동
-            return redirect('signin')
-    # 아닐경우 회원가입 페이지
+        if request.POST['user-password1'] == request.POST['user-password2']:
+            form = UserCreationMultiForm(request.POST, request.FILES)
+            if form.is_valid(): 
+                user = form['user'].save()
+                profile = form['profile'].save(commit=False)
+                profile.user = user
+                profile.nick = user
+                profile.save()
+                return redirect('signin')
+            else:
+                user = request.POST['user-username']
+                user = User.objects.get(username=user)
+                messages.info(request, '아이디가 중복됩니다.')
+                return render(request, 'signup.html')
+        else:
+            messages.info(request, '비밀번호가 다릅니다.')
+            return render(request, 'signup.html')
     return render(request, 'signup.html')
 
 
@@ -27,3 +40,42 @@ class LogoutViews(LogoutView):
     # setting.py에 설정해준 값
     next_page = settings.LOGOUT_REDIRECT_URL
 signout = LogoutViews.as_view()
+
+@login_required
+def userinfo(request):
+    conn_user = request.user
+    conn_profile = Profile.objects.get(user=conn_user)
+
+    if not conn_profile.profile_image:
+        pic_url = ""
+    else:
+        pic_url = conn_profile.profile_image.url
+            
+    context = {
+        'id' : conn_user.username,
+        'nick' : conn_profile.nick,
+        'profile_pic' : pic_url,
+        'intro' : conn_profile.intro,
+    }
+
+    return render(request, 'mypage.html', context=context)
+
+@login_required
+def user_select_info(request, writer):
+    select_profile = Profile.objects.get(nick=writer)
+    select_user = select_profile.user
+
+    if not select_profile.profile_image:
+        pic_url = ""
+    else:
+        pic_url = select_profile.profile_image.url
+            
+    context = {
+        'id' : select_user.username,
+        'nick' : select_profile.nick,
+        'profile_pic' : pic_url,
+        'intro' : select_profile.intro
+    }
+
+    return render(request, 'userpage.html', context=context)
+

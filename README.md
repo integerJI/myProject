@@ -93,3 +93,9 @@ index.html 디자인 수정
 좋아요 기능 추가
 
 ajax, javascript 추가
+
+# 2020 - 04 - 11
+
+mypage, userpage 추가
+
+회원가입 form 생성
