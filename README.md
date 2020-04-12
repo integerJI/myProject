@@ -109,3 +109,7 @@ mypage 수정 기능 추가
 signin, signup 디자인 변경
 
 signin, signup messages 출력 추가
+
+# 2020 - 04 - 12 (2)
+
+index 디자인 변경
