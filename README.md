@@ -103,3 +103,9 @@ mypage, userpage 추가
 # 2020 - 04 - 11 (2)
 
 mypage 수정 기능 추가
+
+# 2020 - 04 - 12
+
+signin, signup 디자인 변경
+
+signin, signup messages 출력 추가
