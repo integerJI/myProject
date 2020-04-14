@@ -56,7 +56,9 @@
         
         <hr>
         {% for comment in post.comments.all %}
-        <span class="comment_user">{{comment.comment_user}}</span>
+        <a class="card-text" href="{% url 'userpage' comment.comment_user %}"><span class="comment_writer_name">{{comment.comment_user}}</span></a>
+
+
         <small class="text-muted">{{comment.comment_date}}</small>
         <br>
         <a class="card-text">{{comment.comment_text}}
@@ -67,8 +69,7 @@
               
               <button type="submit">삭제</button>
           </form>
-
-        <br>
+          <br>
         {% endfor %}
         <br>
         <form action="{% url 'c_post' post.id %}" method="POST">
