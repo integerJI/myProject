@@ -36,14 +36,17 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 def post(request):
-    if request.method == 'POST':
-        post = Post()
-        post.main_text = request.POST['main_text']
-        post.create_img = request.FILES['create_img']
-        post.create_user = User.objects.get(username = request.user.get_username())
-        post.save()
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES)
+        
+        if form.is_valid(): 
+            post = form.save(commit = False)
+            post.create_user = User.objects.get(username = request.user.get_username())
+            post.save()
         return redirect(reverse('index'))
-    return render(request, 'post.html')
+    else:
+        form = PostForm() 
+        return render(request, 'post.html', {'form' : form})  
 
 def detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
