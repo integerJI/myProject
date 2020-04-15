@@ -43,6 +43,7 @@ def post(request):
             post = form.save(commit = False)
             post.create_user = User.objects.get(username = request.user.get_username())
             post.save()
+            post.tag_save()
         return redirect(reverse('index'))
     else:
         form = PostForm() 
@@ -138,10 +139,14 @@ def like(request):
     context = {'likes_count' : post.total_likes, 'message' : message}
     return HttpResponse(json.dumps(context), content_type='application/json')
 
-def search(request):
+def search(request, tag=None):
     posts = Post.objects.all().order_by('-id')
 
     q = request.POST.get('q', "") 
+
+    if tag:
+        posts = Post.objects.filter(tag_set__tag_name__iexact=tag).prefetch_related('tag_set').select_related('create_user')
+        return render(request, 'search.html', {'posts' : posts, 'q' : q, 'tag': tag})
 
     if q:
         posts = posts.filter(main_text__icontains=q)
