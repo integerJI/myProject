@@ -134,3 +134,15 @@ def like(request):
 
     context = {'likes_count' : post.total_likes, 'message' : message}
     return HttpResponse(json.dumps(context), content_type='application/json')
+
+def search(request):
+    posts = Post.objects.all().order_by('-id')
+
+    q = request.POST.get('q', "") 
+
+    if q:
+        posts = posts.filter(main_text__icontains=q)
+        return render(request, 'search.html', {'posts' : posts, 'q' : q})
+    
+    else:
+        return render(request, 'search.html')
