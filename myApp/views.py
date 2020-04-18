@@ -4,7 +4,9 @@ from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Post, Comment
+from .forms import PostForm
 from myMember.models import Profile
+from django.contrib import messages
 
 try:
     from django.utils import simplejson as json
@@ -64,9 +66,16 @@ def update(request, post_id):
 
 def delete(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    post.delete()
-    return redirect(reverse('index'))
 
+    conn_profile = User.objects.get(username = request.user.get_username())
+
+    if conn_profile == post.create_user:
+        post.delete()
+        return redirect(reverse('index'))
+    else:
+        messages.info(request, '삭제할 수 없습니다.')
+        return render(request, 'detail.html', {'post': post})
+        
 @login_required
 def c_post(request, post_id):
     if request.method =='POST':
@@ -85,14 +94,18 @@ def c_delete(request, post_id, comment_id):
     post = get_object_or_404(Post, id=post_id)
     comment = get_object_or_404(Comment, id=comment_id)
 
+    conn_profile = User.objects.get(username = request.user.get_username())
+
     if request.method =='POST':
-            
-        comment.delete()
-        
-        if request.POST.get('app_url') == '/myApp/index/':
-            return redirect(reverse('index'), post_id)
-        else :
-            return redirect('detail', post_id)
+        if conn_profile == post.create_user:
+            comment.delete()
+            if request.POST.get('app_url') == '/myApp/index/':
+                return redirect(reverse('index'), post_id)
+            else :
+                return redirect('detail', post_id)
+        else:
+            messages.info(request, '삭제할 수 없습니다.')
+            return render(request, 'detail.html', {'post': post})
 
 @login_required
 def c_post(request, post_id):
