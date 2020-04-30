@@ -14,6 +14,7 @@ from django.views import generic, View
 from django.contrib.auth.decorators import login_required
 from .forms import UserCreationMultiForm, ProfileForm, ProfileUpdateForm
 from .models import Profile
+from myApp.models import Post
 
 def signup(request):
     if request.method == 'POST':
@@ -55,6 +56,7 @@ signout = LogoutViews.as_view()
 @login_required
 def userinfo(request):
     conn_user = request.user
+    posts = Post.objects.all().filter(create_user=conn_user).order_by('-id')
     conn_profile = Profile.objects.get(user=conn_user)
 
     if not conn_profile.profile_image:
@@ -67,6 +69,7 @@ def userinfo(request):
         'nick' : conn_profile.nick,
         'profile_pic' : pic_url,
         'intro' : conn_profile.intro,
+        'posts' : posts,
     }
 
     return render(request, 'mypage.html', context=context)
@@ -75,6 +78,7 @@ def userinfo(request):
 def user_select_info(request, writer):
     select_profile = Profile.objects.get(nick=writer)
     select_user = select_profile.user
+    posts = Post.objects.all().filter(create_user=select_user).order_by('-id')
 
     if not select_profile.profile_image:
         pic_url = ""
@@ -85,7 +89,8 @@ def user_select_info(request, writer):
         'id' : select_user.username,
         'nick' : select_profile.nick,
         'profile_pic' : pic_url,
-        'intro' : select_profile.intro
+        'intro' : select_profile.intro,
+        'posts' : posts,
     }
 
     return render(request, 'userpage.html', context=context)

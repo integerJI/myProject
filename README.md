@@ -143,3 +143,9 @@ base, index, detail 디자인 수정
 javascript를 이용한 접속 유저와 글쓴 유저 비교 추가
 
 글쓴이와 접속 유저가 다를경우 함수 views.py에 추가
+
+# 2020 - 04 - 30
+
+mypage, userpage 디자인 수정
+
+자신이 쓴 글, 상대방이 쓴 글 출력
