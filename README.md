@@ -152,4 +152,8 @@ mypage, userpage 디자인 수정
 
 # 2020 - 04 - 30 (2)
 
-post 디자인 수정
+post 디자인 수정, default 이미지 추가
+
+# 2020 - 05 - 03
+
+profile_update 수정
