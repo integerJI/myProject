@@ -57,13 +57,34 @@ def detail(request, post_id):
     
 def update(request, post_id):
     post = Post.objects.get(id = post_id)
+    conn_profile = User.objects.get(username = request.user.get_username())
+        
     if request.method == 'POST':
-        post.main_text = request.POST['main_text']
-        post.create_user = User.objects.get(username = request.user.get_username())
-        post.save()
-        return redirect(reverse('index'))
-    return render(request, 'update.html')
+        form = PostForm(request.POST, request.FILES, instance=post)
 
+        if form.is_valid():
+            if conn_profile == post.create_user:
+                post = form.save(commit=False)
+                post.save()
+                post.tag_save()
+
+                context = {'post': post, 'form': form}
+                content = request.POST.get('content')
+                        
+                messages.info(request, '수정 완료')
+                return render(request, 'detail.html', context=context)
+                
+            else:
+                messages.info(request, '수정할 수 없습니다.')
+                return render(request, 'detail.html', {'post': post})
+    else:
+        if conn_profile == post.create_user:
+            form = PostForm(instance = post)
+            return render(request, 'update.html', {'post': post, 'form': form})
+        else:
+            messages.info(request, '수정할 수 없습니다.')
+            return redirect(reverse('index'), post_id)
+            
 def delete(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
@@ -106,33 +127,6 @@ def c_delete(request, post_id, comment_id):
         else:
             messages.info(request, '삭제할 수 없습니다.')
             return render(request, 'detail.html', {'post': post})
-
-@login_required
-def c_post(request, post_id):
-    if request.method =='POST':
-        comment = get_object_or_404(Post, id=post_id)
-        comment_text = request.POST.get('comment_text')
-        comment_user = User.objects.get(username = request.user.get_username())
-        Comment.objects.create(comment=comment, comment_text=comment_text, comment_user=comment_user)
-
-        if request.POST.get('app_url') == '/myApp/index/':
-            return redirect(reverse('index'), post_id)
-        else :
-            return redirect('detail', post_id)
-
-@login_required
-def c_delete(request, post_id, comment_id):
-    post = get_object_or_404(Post, id=post_id)
-    comment = get_object_or_404(Comment, id=comment_id)
-
-    if request.method =='POST':
-            
-        comment.delete()
-        
-        if request.POST.get('app_url') == '/myApp/index/':
-            return redirect(reverse('index'), post_id)
-        else :
-            return redirect('detail', post_id)
 
 @login_required
 @require_POST

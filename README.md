@@ -157,3 +157,9 @@ post 디자인 수정, default 이미지 추가
 # 2020 - 05 - 03
 
 profile_update 수정
+
+# 2020 - 05 - 03 (2)
+
+dev merge
+
+profile_update 디자인 수정, update 수정, index 줄바꿈 태그 추가, post, profile form 수정

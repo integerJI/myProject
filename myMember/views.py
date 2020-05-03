@@ -100,7 +100,6 @@ class ProfileUpdateView(View):
     def get(self, request):
         user = get_object_or_404(User, pk=request.user.pk) 
 
-
         if hasattr(user, 'profile'):  
             profile = user.profile
             profile_form = ProfileUpdateForm(initial={
@@ -111,7 +110,7 @@ class ProfileUpdateView(View):
         else:
             profile_form = ProfileUpdateForm()
 
-        return render(request, 'profile_update.html', { "profile_form": profile_form})
+        return render(request, 'profile_update.html', { "profile_form": profile_form, "profile": profile})
 
     def post(self, request):
         u = User.objects.get(id=request.user.pk)       
