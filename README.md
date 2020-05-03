@@ -163,3 +163,7 @@ profile_update 수정
 dev merge
 
 profile_update 디자인 수정, update 수정, index 줄바꿈 태그 추가, post, profile form 수정
+
+# 2020 - 05 - 04
+
+detail 누락 수정

@@ -73,7 +73,7 @@
           <small class="text-muted">/</small>
           <small class="text-muted">{{post.comments.count}} comment</small>
           <hr>
-          <a class="card-title pricing-card-title">{{ post|add_link|safe }}<small
+          <a class="card-title pricing-card-title">{{ post|add_link|safe|linebreaksbr }}<small
               class="text-muted">&nbsp;&nbsp;{{ post.create_date | naturaltime }}</small></a>
           <hr>
           {% for comment in post.comments.all %}
