@@ -1,0 +1,6 @@
+asgiref==3.2.5
+Django==2.1.8
+django-betterforms==1.2
+Pillow==7.0.0
+pytz==2019.3
+sqlparse==0.3.1
