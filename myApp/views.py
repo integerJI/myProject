@@ -148,16 +148,23 @@ def like(request):
 
 def search(request, tag=None):
     posts = Post.objects.all().order_by('-id')
+    conn_user = request.user
+    conn_profile = Profile.objects.get(user=conn_user)
+
+    if not conn_profile.profile_image:
+        pic_url = ""
+    else:
+        pic_url = conn_profile.profile_image.url
 
     q = request.POST.get('q', "") 
 
     if tag:
         posts = Post.objects.filter(tag_set__tag_name__iexact=tag).prefetch_related('tag_set').select_related('create_user')
-        return render(request, 'search.html', {'posts' : posts, 'q' : q, 'tag': tag})
+        return render(request, 'search.html', {'posts' : posts, 'pic_url' : pic_url, 'q' : q, 'tag': tag})
 
     if q:
         posts = posts.filter(main_text__icontains=q)
-        return render(request, 'search.html', {'posts' : posts, 'q' : q})
+        return render(request, 'search.html', {'posts' : posts, 'pic_url' : pic_url, 'q' : q})
     
     else:
         return render(request, 'search.html')

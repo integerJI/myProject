@@ -167,3 +167,7 @@ profile_update 디자인 수정, update 수정, index 줄바꿈 태그 추가, p
 # 2020 - 05 - 04
 
 detail 누락 수정
+
+# 2020 - 05 - 04 (2)
+
+search 디자인 수정

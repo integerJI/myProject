@@ -12,5 +12,5 @@ def add_link(value):
     tags = value.tag_set.all()
 
     for tag in tags:
-        main_text = re.sub(r'\#'+tag.tag_name+r'\b', '<a href="/intworldapp/explore/tags/'+tag.tag_name+'">#'+tag.tag_name+'</a>', main_text)
+        main_text = re.sub(r'\#'+tag.tag_name+r'\b', '<a href="/myApp/explore/tags/'+tag.tag_name+'">#'+tag.tag_name+'</a>', main_text)
     return main_text
