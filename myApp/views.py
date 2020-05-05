@@ -46,6 +46,7 @@ def post(request):
             post.create_user = User.objects.get(username = request.user.get_username())
             post.save()
             post.tag_save()
+            post.tag_save_2()
         return redirect(reverse('index'))
     else:
         form = PostForm() 
@@ -67,6 +68,7 @@ def update(request, post_id):
                 post = form.save(commit=False)
                 post.save()
                 post.tag_save()
+                post.tag_save_2()
 
                 context = {'post': post, 'form': form}
                 content = request.POST.get('content')
@@ -146,7 +148,7 @@ def like(request):
     context = {'likes_count' : post.total_likes, 'message' : message}
     return HttpResponse(json.dumps(context), content_type='application/json')
 
-def search(request, tag=None):
+def search(request, tag=None, tag_2=None):
     posts = Post.objects.all().order_by('-id')
     conn_user = request.user
     conn_profile = Profile.objects.get(user=conn_user)
@@ -156,16 +158,19 @@ def search(request, tag=None):
     else:
         pic_url = conn_profile.profile_image.url
 
-    q = request.POST.get('q', False 
+    q = request.POST.get('q', False) 
 
     if tag:
         posts = Post.objects.filter(tag_set__tag_name__iexact=tag).prefetch_related('tag_set').select_related('create_user')
-        return render(request, 'search.html', {'posts' : posts, 'pic_url' : pic_url, 'q' : q, 'tag': tag})
+        if tag_2:
+            posts = Post.objects.filter(tag_set_2__tag_name_2__iexact=tag_2).prefetch_related('tag_set_2').select_related('create_user')
 
-    if q:
+    elif q:
         posts = posts.filter(main_text__icontains=q)
-        return render(request, 'search.html', {'posts' : posts, 'pic_url' : pic_url, 'q' : q})
     
     else:
         messages.info(request, '입력된 값이 없습니다.')
         return redirect('index')
+
+    return render(request, 'search.html', {'posts' : posts, 'pic_url' : pic_url, 'q' : q, 'tag': tag})
+    
