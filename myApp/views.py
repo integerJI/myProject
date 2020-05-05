@@ -156,7 +156,7 @@ def search(request, tag=None):
     else:
         pic_url = conn_profile.profile_image.url
 
-    q = request.POST.get('q', "") 
+    q = request.POST.get('q', False 
 
     if tag:
         posts = Post.objects.filter(tag_set__tag_name__iexact=tag).prefetch_related('tag_set').select_related('create_user')
@@ -167,4 +167,5 @@ def search(request, tag=None):
         return render(request, 'search.html', {'posts' : posts, 'pic_url' : pic_url, 'q' : q})
     
     else:
-        return render(request, 'search.html')
+        messages.info(request, '입력된 값이 없습니다.')
+        return redirect('index')
