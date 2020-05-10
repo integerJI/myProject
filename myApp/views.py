@@ -17,10 +17,8 @@ except ImportError:
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST
 
-def index(request, tag=None, tag_2=None):
+def index(request):
     posts = Post.objects.order_by('-id')
-    tag_all = Tag.objects.annotate(num_post=Count('post')).order_by('-id')
-    tag_all_2 = Tag_2.objects.annotate(num_post=Count('post')).order_by('-id')
     app_url = request.path
 
     conn_user = request.user
@@ -30,21 +28,6 @@ def index(request, tag=None, tag_2=None):
         pic_url = ""
     else:
         pic_url = conn_profile.profile_image.url
-            
-    p = request.POST.get('p', False) 
-    y = request.GET.get('y', False) 
-
-    if tag:
-        posts = Post.objects.filter(tag_set__tag_name__iexact=tag).prefetch_related('tag_set').select_related('create_user')
-        if p:
-            posts = Post.objects.filter(tag_set_2__tag_name_2__iexact=p).prefetch_related('tag_set_2').select_related('create_user')
-
-    elif tag_2:
-        posts = Post.objects.filter(tag_set_2__tag_name_2__iexact=tag_2).prefetch_related('tag_set_2').select_related('create_user')
-        if y:
-            posts = Post.objects.filter(tag_set__tag_name__iexact=y).prefetch_related('tag_set').select_related('create_user')
-    else:
-        posts = Post.objects.all().prefetch_related('tag_set','tag_set_2').select_related('create_user').order_by('-id')
 
     context = {
         'id' : conn_user.username,
@@ -53,13 +36,8 @@ def index(request, tag=None, tag_2=None):
         'intro' : conn_profile.intro,
         'posts' : posts,
         'app_url' : app_url,
-        'tag': tag,
-        'tag_22': tag_2, 
-        'tag_all': tag_all,
-        'tag_all_2': tag_all_2, 
-        'p':p, 
-        'y':y,
     }
+
     return render(request, 'index.html', context=context)
 
 def post(request):
@@ -173,7 +151,7 @@ def like(request):
     context = {'likes_count' : post.total_likes, 'message' : message}
     return HttpResponse(json.dumps(context), content_type='application/json')
 
-def search(request):
+def search(request, tag=None, tag_2=None):
     posts = Post.objects.all().order_by('-id')
     conn_user = request.user
     conn_profile = Profile.objects.get(user=conn_user)
@@ -183,14 +161,24 @@ def search(request):
     else:
         pic_url = conn_profile.profile_image.url
 
-    q = request.POST.get('q', False) 
+    q = request.POST.get('q', False)
+    y = request.POST.get('y', False) 
 
-    if q:
-        posts = posts.filter(Q(main_text__icontains=q))
+    if tag:
+        posts = Post.objects.filter(tag_set__tag_name__iexact=tag).prefetch_related('tag_set').select_related('create_user').order_by('-id')
+        if y:
+            posts = Post.objects.filter(tag_set_2__tag_name_2__iexact=y).prefetch_related('tag_set_2').select_related('create_user').order_by('-id')
+
+    elif tag_2:
+        posts = Post.objects.filter(tag_set_2__tag_name_2__iexact=tag_2).prefetch_related('tag_set_2').select_related('create_user').order_by('-id')
+        if y:
+            posts = Post.objects.filter(tag_set__tag_name__iexact=y).prefetch_related('tag_set').select_related('create_user').order_by('-id')
+    elif q:
+        posts = posts.filter(main_text__icontains=q).order_by('-id')
     
     else:
         messages.info(request, '입력된 값이 없습니다.')
         return redirect('index')
 
-    return render(request, 'search.html', {'posts' : posts, 'pic_url' : pic_url, 'q' : q})
+    return render(request, 'search.html', {'posts' : posts, 'pic_url' : pic_url, 'q' : q, 'tag': tag, 'y' : y, 'tag_2': tag_2})
     
