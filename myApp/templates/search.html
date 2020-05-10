@@ -113,6 +113,14 @@
             </div>
           </div>
         </div>
+
+          {% if tag %}
+          <form action="" method="post">
+            {% csrf_token %}
+            <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="y">
+          </form>
+          {% endif %}
+
           {% if messages %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
           {% for message in messages %}
